@@ -26,7 +26,7 @@ import {
   STRATEGY,
 } from 'loopback4-authentication';
 import {authorize} from 'loopback4-authorization';
-import {Permissions} from '../enums';
+import {ErrorKeys, Permissions} from '../enums';
 import {Products, ProductsDTO} from '../models';
 import {
   CategoryRepository,
@@ -87,7 +87,7 @@ export class ProductsController {
       !storeToAttach.id ||
       storeToAttach.sellerId !== this.user.id
     ) {
-      throw new HttpErrors.BadRequest('Store details are not correct !');
+      throw new HttpErrors.BadRequest(ErrorKeys.IncorrectStoreDetails);
     }
 
     if (!category) {

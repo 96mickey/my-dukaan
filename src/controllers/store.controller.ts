@@ -28,7 +28,7 @@ import {
   STRATEGY,
 } from 'loopback4-authentication';
 import {authorize} from 'loopback4-authorization';
-import {PageRef, Permissions} from '../enums';
+import {ErrorKeys, PageRef, Permissions} from '../enums';
 import {Store} from '../models';
 import {DynamicLinkProviderInterface} from '../providers/types';
 import {StoreRepository} from '../repositories';
@@ -261,7 +261,7 @@ export class StoreController {
     }
     const storeToUpdate = await this.storeRepository.findById(id);
     if (!storeToUpdate || storeToUpdate.sellerId !== this.user.id) {
-      throw new HttpErrors.BadRequest('Store information is not correct!');
+      throw new HttpErrors.BadRequest(ErrorKeys.IncorrectStoreInfo);
     }
     await this.storeRepository.replaceById(id, store);
   }
@@ -283,7 +283,7 @@ export class StoreController {
     }
     const storeToUpdate = await this.storeRepository.findById(id);
     if (!storeToUpdate || storeToUpdate.sellerId !== this.user.id) {
-      throw new HttpErrors.BadRequest('Store information is not correct!');
+      throw new HttpErrors.BadRequest(ErrorKeys.IncorrectStoreInfo);
     }
     await this.storeRepository.deleteById(id);
   }

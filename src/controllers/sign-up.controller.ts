@@ -17,7 +17,7 @@ import {
   STRATEGY,
 } from 'loopback4-authentication';
 import {authorize} from 'loopback4-authorization';
-import {RoleType} from '../enums';
+import {ErrorKeys, RoleType} from '../enums';
 import {AuthUser, SignUpRequest, TokenResponse, User} from '../models';
 import {RoleRepository, UserRepository} from '../repositories';
 
@@ -45,7 +45,7 @@ export class SignUpController {
     // this needs to be via model validation
     const e164RegEx = /^\+?[1-9]\d{1,14}$/;
     if (user.phone && !e164RegEx.test(user.phone)) {
-      throw new HttpErrors.BadRequest('Phone number invalid.');
+      throw new HttpErrors.BadRequest(ErrorKeys.InvalidPhone);
     }
     // check for duplicate phone
     const userToCheck = await this.userRepository.findOne({
@@ -67,7 +67,7 @@ export class SignUpController {
       },
     });
     if (!role || !role.id) {
-      throw new HttpErrors.NotFound('Role information is missing.');
+      throw new HttpErrors.NotFound(ErrorKeys.RoleInfoMissing);
     }
 
     userToRegister.roleId = role.id;

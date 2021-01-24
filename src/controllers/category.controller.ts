@@ -18,7 +18,7 @@ import {
 } from '@loopback/rest';
 import {authenticate, STRATEGY} from 'loopback4-authentication';
 import {authorize} from 'loopback4-authorization';
-import {Permissions} from '../enums';
+import {ErrorKeys, Permissions} from '../enums';
 import {Category} from '../models';
 import {CategoryRepository} from '../repositories';
 
@@ -59,7 +59,7 @@ export class CategoryController {
       },
     });
     if (existingCat) {
-      throw new HttpErrors.BadRequest('Category already exists !');
+      throw new HttpErrors.BadRequest(ErrorKeys.CategoryAlreadyExists);
     }
     return this.categoryRepository.create({
       name: category.name.toLowerCase(),

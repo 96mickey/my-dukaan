@@ -10,7 +10,7 @@ import {HttpErrors} from '@loopback/rest';
 import * as bcrypt from 'bcrypt';
 import {AuthenticationBindings, AuthErrorKeys} from 'loopback4-authentication';
 import {PgdbDataSource} from '../datasources';
-import {AuthenticateErrorKeys} from '../enums';
+import {ErrorKeys} from '../enums';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import {AuthUser, User, UserCredentials, UserRelations} from '../models';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -58,7 +58,9 @@ export class UserRepository extends DefaultCrudRepository<
       });
       await this.credentials(user.id).create(creds);
     } catch (err) {
-      throw new HttpErrors.UnprocessableEntity('Error while hashing password');
+      throw new HttpErrors.UnprocessableEntity(
+        ErrorKeys.ErrorInHashingPassword,
+      );
     }
     return user;
   }
@@ -67,15 +69,13 @@ export class UserRepository extends DefaultCrudRepository<
     const user = await super.findOne({where: {username}});
     const creds = user && (await this.credentials(user.id).get());
     if (!user || user.deleted || !creds || !creds.password) {
-      throw new HttpErrors.Unauthorized(AuthenticateErrorKeys.UserDoesNotExist);
+      throw new HttpErrors.Unauthorized(ErrorKeys.UserDoesNotExist);
     } else if (!(await bcrypt.compare(password, creds.password))) {
       throw new HttpErrors.Unauthorized(AuthErrorKeys.InvalidCredentials);
     } else if (
       await bcrypt.compare(password, process.env.USER_TEMP_PASSWORD!)
     ) {
-      throw new HttpErrors.Forbidden(
-        AuthenticateErrorKeys.TempPasswordLoginDisallowed,
-      );
+      throw new HttpErrors.Forbidden(ErrorKeys.TempPasswordLoginDisallowed);
     }
     return user;
   }
@@ -88,13 +88,11 @@ export class UserRepository extends DefaultCrudRepository<
     const user = await super.findOne({where: {username}});
     const creds = user && (await this.credentials(user.id).get());
     if (!user || user.deleted || !creds || !creds.password) {
-      throw new HttpErrors.Unauthorized(AuthenticateErrorKeys.UserDoesNotExist);
+      throw new HttpErrors.Unauthorized(ErrorKeys.UserDoesNotExist);
     } else if (!(await bcrypt.compare(password, creds.password))) {
       throw new HttpErrors.Unauthorized(AuthErrorKeys.WrongPassword);
     } else if (await bcrypt.compare(newPassword, creds.password)) {
-      throw new HttpErrors.Unauthorized(
-        'Password cannot be same as previous password!',
-      );
+      throw new HttpErrors.Unauthorized(ErrorKeys.SamePasswordError);
     }
     await this.credentials(user.id).patch({
       password: await bcrypt.hash(newPassword, this.saltRounds),
