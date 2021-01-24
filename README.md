@@ -1,8 +1,5 @@
 # my-dukaan
 
-This application is generated using [LoopBack 4 CLI](https://loopback.io/doc/en/lb4/Command-line-interface.html) with the
-[initial project layout](https://loopback.io/doc/en/lb4/Loopback-application-layout.html).
-
 ## Install dependencies
 
 By default, dependencies were installed when this application was generated.
@@ -12,11 +9,30 @@ Whenever dependencies in `package.json` are changed, run the following command:
 npm install
 ```
 
-To only install resolved dependencies in `package-lock.json`:
+## Setup base project
 
-```sh
-npm ci
+Create a .env file in the src directory
 ```
+DB_HOST=localhost
+DB_PORT=5432
+DB_USER=postgres
+DB_PASSWORD=postgrestest
+DB_DATABASE=my-dukaan
+DB_SCHEMA=main
+
+FIREBASE_API_KEY=AIzaSyD_P1qQkOWgOvpncCNod-Lmqi0R3DQVccs
+GOOGLE_DYNAMIC_LINK_GENERATOR_URI=https://firebasedynamiclinks.googleapis.com/v1/shortLinks?key=
+SERVER_URL=https://abc.com
+FIREBASE_DYNAMIC_LINK_PREFIX=https://testmydukaan.page.link/
+ANDROID_PACKAGE_NAME=com.example.myapp
+```
+
+Add this to the .env file. (Modify the data according to your local setup)
+
+To get the database up and running, execute the command
+```npm run db-migrate```
+
+This will update your database schema and seed some data for app to work properly.
 
 ## Run the application
 
@@ -24,52 +40,19 @@ npm ci
 npm start
 ```
 
-You can also run `node .` to skip the build step.
+The database architecture as of now follows this pattern
 
-Open http://127.0.0.1:3000 in your browser.
+![my-dukaan](https://user-images.githubusercontent.com/20533190/105642565-83988d00-5eb0-11eb-9d7f-5fa04c56fe4a.png)
 
-## Rebuild the project
 
-To incrementally build the project:
+In the application there is a place when store information could be shared via a url. It displays a warning as shown in the below attached screenshot. It is because this project does not have any UI client to link to. Once the UI clients are up it will redirect to respective apps. 
+For android it will redirect to the application and to a specific page inside (based on config). If the app is not installed it will take you to the play store.
+Same behavious could be seen in IOS.
+For web it will redirect you to the website (internal routing could be manages on website itself).
 
-```sh
-npm run build
-```
+![image](https://user-images.githubusercontent.com/20533190/105642720-5bf5f480-5eb1-11eb-9f3b-a43bb40adb47.png)
 
-To force a full build by cleaning up cached artifacts:
+The authentication used is JWT based. 
+The authorization is permission based. This means that every action is based on permissions which are added to the database according to the level of user.
 
-```sh
-npm run rebuild
-```
-
-## Fix code style and formatting issues
-
-```sh
-npm run lint
-```
-
-To automatically fix such issues:
-
-```sh
-npm run lint:fix
-```
-
-## Other useful commands
-
-- `npm run migrate`: Migrate database schemas for models
-- `npm run openapi-spec`: Generate OpenAPI spec into a file
-- `npm run docker:build`: Build a Docker image for this application
-- `npm run docker:run`: Run this application inside a Docker container
-
-## Tests
-
-```sh
-npm test
-```
-
-## What's next
-
-Please check out [LoopBack 4 documentation](https://loopback.io/doc/en/lb4/) to
-understand how you can continue to add features to this application.
-
-[![LoopBack](https://github.com/strongloop/loopback-next/raw/master/docs/site/imgs/branding/Powered-by-LoopBack-Badge-(blue)-@2x.png)](http://loopback.io/)
+Also basic security items are being taken care of like hiding headers and rate limiting.
