@@ -1,7 +1,8 @@
 {
   "name": "my-dukaan",
   "version": "0.0.1",
-  "description": "Documents",
+  "author": "mayank <nauriyalmayank123@gmail.com>",
+  "description": "This application provides api for a seller to add a store with products to it. These products will be available for customers to browse through and they can buy them.",
   "keywords": [
     "loopback-application",
     "loopback"
@@ -43,7 +44,6 @@
     "type": "git",
     "url": ""
   },
-  "author": "mayank <mayank.nauriyal@sourcefuse.com>",
   "license": "",
   "files": [
     "README.md",
