@@ -56,3 +56,11 @@ The authentication used is JWT based.
 The authorization is permission based. This means that every action is based on permissions which are added to the database according to the level of user.
 
 Also basic security items are being taken care of like hiding headers and rate limiting.
+
+Once your application has started, you can visit 
+```http://localhost:3000/```
+on the browser to get an overview of APIS.
+
+![image](https://user-images.githubusercontent.com/20533190/105664965-f549f880-5efb-11eb-9c2a-9017874e8e6d.png)
+
+![image](https://user-images.githubusercontent.com/20533190/105665131-55409f00-5efc-11eb-99ba-b35a41ec1b12.png)
